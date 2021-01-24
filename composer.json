@@ -1,0 +1,32 @@
+{
+    "name": "vkolegov/dashamail-php",
+    "description": "DashaMail PHP library",
+    "type": "library",
+    "require": {
+        "php": "^5.6|^7.0",
+        "ext-curl": "*",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.0",
+        "vlucas/phpdotenv": "^4.0"
+    },
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Vladislav Kolegov",
+            "email": "v.kolegov@outlook.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "VKolegov\\DashaMail\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "VKolegov\\DashaMail\\Tests\\": "tests/"
+        }
+    }
+}
