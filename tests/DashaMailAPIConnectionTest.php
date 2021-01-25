@@ -32,7 +32,7 @@ class DashaMailAPIConnectionTest extends TestCase
 
     public function testConstructorWrongCredentials()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->setExpectedException('InvalidArgumentException');
         new DashaMailConnection(null, null);
         new DashaMailConnection('', null);
         new DashaMailConnection(null, '');
@@ -50,8 +50,7 @@ class DashaMailAPIConnectionTest extends TestCase
     {
         $connection = new DashaMailConnection($this->username . 'blabla', $this->password);
 
-        $this->expectException(DashaMailRequestErrorException::class);
-        $this->expectExceptionCode(2);
+        $this->setExpectedException('VKolegov\DashaMail\Exceptions\DashaMailRequestErrorException', '', 2);
 
         $connection->callMethod('account.get_balance');
     }
@@ -60,7 +59,7 @@ class DashaMailAPIConnectionTest extends TestCase
     {
         $connection = new DashaMailConnection($this->username, $this->password);
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->setExpectedException('InvalidArgumentException');
 
         $connection->callMethodRaw('account.get_balance', [], 'blablabla');
     }
@@ -71,6 +70,8 @@ class DashaMailAPIConnectionTest extends TestCase
 
         $r = $connection->callMethod('account.get_balance');
 
-        fprintf(STDOUT, "%s", var_export($r, true));
+        $this->assertArrayHasKey('limit_members', $r);
+        $this->assertArrayHasKey('limit_emails', $r);
+        $this->assertArrayHasKey('members', $r);
     }
 }

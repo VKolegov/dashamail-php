@@ -24,7 +24,7 @@ class DashaMailConnection
      */
     private $password;
 
-    const ALLOWED_RESPONSE_FORMATS = ['json', 'jsonp', 'xml'];
+    private $allowedResponseFormats = ['json', 'jsonp', 'xml'];
 
     /**
      * DashaMailConnection constructor.
@@ -102,9 +102,9 @@ class DashaMailConnection
             throw new InvalidArgumentException("Method name should be string");
         }
 
-        if (!in_array($format, self::ALLOWED_RESPONSE_FORMATS)) {
+        if (!in_array($format, $this->allowedResponseFormats)) {
             throw new InvalidArgumentException(
-                "Unknown format, allowed: " . implode(',', self::ALLOWED_RESPONSE_FORMATS)
+                "Unknown format, allowed: " . implode(',', $this->allowedResponseFormats)
             );
         }
 
