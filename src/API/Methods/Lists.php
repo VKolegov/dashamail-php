@@ -87,6 +87,34 @@ class Lists
         return $responseData['list_id'];
     }
 
+
+    /**
+     * Updated list data
+     * @param int $listId
+     * @param array $params 'name', 'phone', 'company', etc...
+     * @return bool Was operation successful?
+     * @throws DashaMailRequestErrorException
+     * @throws \VKolegov\DashaMail\Exceptions\DashaMailConnectionException
+     * @throws \VKolegov\DashaMail\Exceptions\DashaMailInvalidResponseException
+     * @see https://dashamail.ru/api_details/?method=lists.update
+     */
+    public function update($listId, $params = [])
+    {
+        $methodName = 'lists.update';
+
+        if (!is_int($listId) || $listId <= 0) {
+            throw new \InvalidArgumentException("\$listId should be positive integer");
+        }
+
+        $params = array_merge(
+            [
+                'list_id' => $listId
+            ], $params
+        );
+
+        return $this->connection->callMethod($methodName, $params, 'POST');
+    }
+
     /**
      * Removes address list
      * @param int $listId Address list ID

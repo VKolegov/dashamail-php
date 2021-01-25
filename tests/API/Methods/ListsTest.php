@@ -109,6 +109,26 @@ class ListsTest extends TestCase
         $this->assertTrue(is_int($this->testListId));
     }
 
+    public function testUpdateListName()
+    {
+        $newName = 'PHPUNIT TEST UPDATE NAME';
+        $this->testAdd();
+
+        $success = $this->listsApi->update(
+            $this->testListId,
+            ['name' => $newName]
+        );
+
+        $this->assertTrue($success);
+
+        // Requesting and comparing if new name was actually set
+        $updatedList = $this->listsApi->get(
+            $this->testListId
+        );
+
+        $this->assertEquals($newName, $updatedList['name']);
+    }
+
     public function testDeleteEmptyList()
     {
         $this->testAdd();
