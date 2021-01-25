@@ -48,14 +48,34 @@ class ListsTest extends TestCase
         }
     }
 
+    public function testGet()
+    {
+        $lists = $this->listsApi->get();
+
+        $this->assertTrue(is_array($lists));
+    }
+
     public function testAdd()
     {
         $this->testListId = $this->listsApi->add(
             $this->testListName
         );
 
-        // Expecting newly created address base ID
+        // Expecting newly created address list ID
         $this->assertTrue(is_int($this->testListId));
+    }
+
+    public function testGetSpecificList()
+    {
+        $this->testAdd();
+
+        $list = $this->listsApi->get($this->testListId);
+
+        $this->assertTrue(is_array($list));
+
+        $this->assertArrayHasKey('id', $list);
+        $this->assertArrayHasKey('name', $list);
+        $this->assertEquals($this->testListName, $list['name']);
     }
 
     public function testAddUnexpectedParams()

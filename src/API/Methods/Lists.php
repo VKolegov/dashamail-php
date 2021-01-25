@@ -30,10 +30,39 @@ class Lists
     }
 
     /**
-     * Creates new address base
-     * @param string $name Future address base name
-     * @param array|null $params
-     * @return int Address Base ID
+     * Retrieves existing address list
+     * @param int|null $listId If provided, data returned for specific list
+     * @return array array of lists, or one list if $listId is provided
+     * @throws DashaMailRequestErrorException
+     * @throws \VKolegov\DashaMail\Exceptions\DashaMailConnectionException
+     * @throws \VKolegov\DashaMail\Exceptions\DashaMailInvalidResponseException
+     */
+    public function get($listId = null)
+    {
+        $methodName = 'lists.get';
+        $params = [];
+
+        if ($listId !== null) {
+            if (!is_int($listId) || $listId <= 0) {
+                throw new \InvalidArgumentException("\$listId should be positive integer");
+            }
+            $params['list_id'] = $listId;
+        }
+
+        $responseData = $this->connection->callMethod($methodName, $params);
+
+        if (count($responseData) === 1) {
+            return $responseData[0];
+        }
+
+        return $responseData;
+    }
+
+    /**
+     * Creates new address list
+     * @param string $name Future address list name
+     * @param array $params 'company', 'phone', etc...
+     * @return int Address list ID
      * @throws DashaMailRequestErrorException
      * @throws \VKolegov\DashaMail\Exceptions\DashaMailConnectionException
      * @throws \VKolegov\DashaMail\Exceptions\DashaMailInvalidResponseException
