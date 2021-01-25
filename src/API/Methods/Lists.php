@@ -57,4 +57,33 @@ class Lists
 
         return $responseData['list_id'];
     }
+
+    /**
+     * Removes address list
+     * @param int $listId Address list ID
+     * @return int number of subscribers removed
+     * @throws DashaMailRequestErrorException
+     * @throws \VKolegov\DashaMail\Exceptions\DashaMailConnectionException
+     * @throws \VKolegov\DashaMail\Exceptions\DashaMailInvalidResponseException
+     */
+    public function delete($listId)
+    {
+        $methodName = 'lists.delete';
+
+        if (!is_int($listId) || $listId <= 0) {
+            throw new \InvalidArgumentException("\$listId should be positive integer");
+        }
+
+        $params = [
+            'list_id' => $listId
+        ];
+
+        $responseData = $this->connection->callMethod($methodName, $params, 'POST');
+
+        if ($responseData['deleted_members'] === 'empty') {
+            return 0;
+        }
+
+        return $responseData['deleted_members'];
+    }
 }

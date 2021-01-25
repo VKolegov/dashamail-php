@@ -42,7 +42,10 @@ class ListsTest extends TestCase
     protected function tearDown()
     {
         parent::tearDown();
-        // TODO: delete test list
+
+        if ($this->testListId > 0) {
+            $this->listsApi->delete($this->testListId);
+        }
     }
 
     public function testAdd()
@@ -84,5 +87,16 @@ class ListsTest extends TestCase
 
         // Expecting newly created address list ID
         $this->assertTrue(is_int($this->testListId));
+    }
+
+    public function testDeleteEmptyList()
+    {
+        $this->testAdd();
+
+        $count = $this->listsApi->delete($this->testListId);
+
+        $this->assertTrue(is_int($count));
+
+        $this->testListId = null;
     }
 }
