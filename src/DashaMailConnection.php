@@ -126,7 +126,7 @@ class DashaMailConnection
      * @param string $methodName API method name
      * @param array $params API method params
      * @param string $httpMethod GET/POST
-     * @return array response 'data' field value
+     * @return array|bool response 'data' field value
      * @throws DashaMailConnectionException
      * @throws DashaMailRequestErrorException
      * @throws DashaMailInvalidResponseException
