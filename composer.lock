@@ -4,9 +4,59 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "89a170cb59c049aa41edb3a805945798",
+    "content-hash": "27de7d58d987d2999188a6ef755cd2bd",
     "packages": [],
     "packages-dev": [
+        {
+            "name": "crackle/crackle",
+            "version": "v2.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/gebn/Crackle.git",
+                "reference": "4b695a155a8ea3d1b6a7c814f9849762edd4b3a7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/gebn/Crackle/zipball/4b695a155a8ea3d1b6a7c814f9849762edd4b3a7",
+                "reference": "4b695a155a8ea3d1b6a7c814f9849762edd4b3a7",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.3.0"
+            },
+            "suggest": {
+                "ext-fileinfo": "Enables automatic detection of file MIME types."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Crackle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "George Brighton",
+                    "homepage": "https://gebn.co.uk/"
+                }
+            ],
+            "description": "Crackle is a powerful yet easy to use object-oriented HTTP client.",
+            "homepage": "https://github.com/gebn/Crackle",
+            "keywords": [
+                "curl",
+                "http",
+                "request"
+            ],
+            "support": {
+                "issues": "https://github.com/gebn/Crackle/issues",
+                "source": "https://github.com/gebn/Crackle/tree/master"
+            },
+            "time": "2016-02-24T23:21:23+00:00"
+        },
         {
             "name": "doctrine/instantiator",
             "version": "1.0.5",
@@ -64,6 +114,110 @@
                 "source": "https://github.com/doctrine/instantiator/tree/master"
             },
             "time": "2015-06-14T21:17:01+00:00"
+        },
+        {
+            "name": "fzaninotto/faker",
+            "version": "v1.9.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fzaninotto/Faker.git",
+                "reference": "848d8125239d7dbf8ab25cb7f054f1a630e68c2e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/848d8125239d7dbf8ab25cb7f054f1a630e68c2e",
+                "reference": "848d8125239d7dbf8ab25cb7f054f1a630e68c2e",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3.3 || ^7.0"
+            },
+            "require-dev": {
+                "ext-intl": "*",
+                "phpunit/phpunit": "^4.8.35 || ^5.7",
+                "squizlabs/php_codesniffer": "^2.9.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.9-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Faker\\": "src/Faker/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "François Zaninotto"
+                }
+            ],
+            "description": "Faker is a PHP library that generates fake data for you.",
+            "keywords": [
+                "data",
+                "faker",
+                "fixtures"
+            ],
+            "support": {
+                "issues": "https://github.com/fzaninotto/Faker/issues",
+                "source": "https://github.com/fzaninotto/Faker/tree/v1.9.2"
+            },
+            "abandoned": true,
+            "time": "2020-12-11T09:56:16+00:00"
+        },
+        {
+            "name": "gebn/brush",
+            "version": "v1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/gebn/Brush.git",
+                "reference": "b6a53f8d91b675642fc9c3367fc40b2109591442"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/gebn/Brush/zipball/b6a53f8d91b675642fc9c3367fc40b2109591442",
+                "reference": "b6a53f8d91b675642fc9c3367fc40b2109591442",
+                "shasum": ""
+            },
+            "require": {
+                "crackle/crackle": "*",
+                "ext-curl": "*",
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Brush\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "George Brighton",
+                    "homepage": "https://gebn.co.uk/"
+                }
+            ],
+            "description": "Brush is a complete object-oriented PHP wrapper for the Pastebin API.",
+            "homepage": "https://github.com/gebn/Brush",
+            "keywords": [
+                "api",
+                "pastebin",
+                "text",
+                "wrapper"
+            ],
+            "support": {
+                "issues": "https://github.com/gebn/Brush/issues",
+                "source": "https://github.com/gebn/Brush/tree/master"
+            },
+            "time": "2019-02-27T21:00:07+00:00"
         },
         {
             "name": "phpdocumentor/reflection-docblock",

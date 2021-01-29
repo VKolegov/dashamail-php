@@ -64,7 +64,7 @@ class DashaMailConnection
             CURLOPT_POST => $httpMethod === 'POST' ? 1 : 0,
             CURLOPT_POSTFIELDS => $httpMethod === 'POST' ? $params : null,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => 60,
+            CURLOPT_TIMEOUT => 600,
             CURLOPT_USERAGENT => 'DashaMail-PHP-SDK',
             CURLOPT_SSL_VERIFYHOST => 2,
             CURLOPT_SSL_VERIFYPEER => true,

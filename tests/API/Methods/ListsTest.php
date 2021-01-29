@@ -6,6 +6,9 @@
 
 namespace VKolegov\DashaMail\Tests\API\Methods;
 
+use Brush\Accounts\Developer;
+use Brush\Pastes\Draft;
+use Faker\Factory;
 use PHPUnit\Framework\TestCase;
 use VKolegov\DashaMail\API\EntryPoint;
 
@@ -139,4 +142,58 @@ class ListsTest extends TestCase
 
         $this->testListId = null;
     }
+
+    public function testSuccessfulListUpload()
+    {
+        $this->testAdd();
+
+        $url = $this->getFileUrl();
+
+        $result = $this->listsApi->upload(
+            $this->testListId,
+            $url
+        );
+
+        $this->assertTrue($result);
+    }
+
+    /**
+     * @return string URL to download file
+     */
+    private function getFileUrl()
+    {
+
+        $faker = Factory::create();
+
+        // 5 megabytes RAM
+        $csv = fopen('php://temp/maxmemory:' . (5 * 1024 * 1024), 'r+');
+
+        for ($i = 0; $i < 50; $i++) {
+            fputcsv($csv, [$faker->email], ';');
+        }
+        rewind($csv);
+
+        $csvText = stream_get_contents($csv);
+
+        $draft = new Draft();
+        $draft->setContent($csvText);
+        $draft->setTitle('phpunit_dashamail_sdk_test.csv');
+        $draft->setExpiry('10M'); // 10 minutes (minimal value)
+        $draft->setVisibility(0); // 0=public 1=unlisted 2=private
+
+        // the Developer class manages a developer key
+        $developer = new Developer('50s3ST61uoK8kEhol5FcUxPNfqeAs1Q-');
+
+        $paste = $draft->paste($developer);
+
+        $url = $paste->getUrl();
+
+        // extracting code
+        preg_match_all('/https:\/\/pastebin\.com\/(.+)/', $url, $regexpMatches);
+
+        $code = $regexpMatches[1][0];
+
+        return 'https://pastebin.com/raw/'. $code;
+    }
+
 }
