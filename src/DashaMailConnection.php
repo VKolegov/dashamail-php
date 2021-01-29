@@ -46,16 +46,23 @@ class DashaMailConnection
 
     /**
      * Initializes cUrl session and performs request
-     * @param $url
+     * @param array $params
      * @param string $httpMethod
      * @return string
      * @throws DashaMailConnectionException
      */
-    private function rawRequest($url, $httpMethod = 'GET')
+    private function rawRequest($params, $httpMethod = 'GET')
     {
+        $url = self::API_URL;
+
+        if ($httpMethod === 'GET') {
+            $url .= '?' . http_build_query($params);
+        }
+
         $curlOptions = [
             CURLOPT_URL => $url,
             CURLOPT_POST => $httpMethod === 'POST' ? 1 : 0,
+            CURLOPT_POSTFIELDS => $httpMethod === 'POST' ? $params : null,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT => 60,
             CURLOPT_USERAGENT => 'DashaMail-PHP-SDK',
@@ -116,9 +123,7 @@ class DashaMailConnection
                 'format' => $format
             ], $params);
 
-        $url = self::API_URL . '?' . http_build_query($requestParams);
-
-        return $this->rawRequest($url, $httpMethod);
+        return $this->rawRequest($requestParams, $httpMethod);
     }
 
     /**
