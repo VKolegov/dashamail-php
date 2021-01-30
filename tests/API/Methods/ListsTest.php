@@ -28,6 +28,10 @@ class ListsTest extends TestCase
      * @var int id of test address list
      */
     private $testListId;
+    /**
+     * @var \Faker\Generator
+     */
+    private $faker;
 
     protected function setUp()
     {
@@ -36,6 +40,9 @@ class ListsTest extends TestCase
             getenv('DASHAMAIL_USERNAME'),
             getenv('DASHAMAIL_PASSWORD')
         );
+
+
+        $this->faker = Factory::create();
 
         $this->listsApi = $apiEntryPoint->Lists();
 
@@ -162,15 +169,11 @@ class ListsTest extends TestCase
      */
     private function getFileUrl()
     {
-
-        $faker = Factory::create();
-
         // 5 megabytes RAM
         $csv = fopen('php://temp/maxmemory:' . (5 * 1024 * 1024), 'r+');
 
-        for ($i = 0; $i < 50; $i++) {
-            fputcsv($csv, [$faker->email], ';');
-        }
+        $emails = $this->getEmails(25);
+        fputcsv($csv, $emails, ';');
         rewind($csv);
 
         $csvText = stream_get_contents($csv);
@@ -194,6 +197,169 @@ class ListsTest extends TestCase
         $code = $regexpMatches[1][0];
 
         return 'https://pastebin.com/raw/'. $code;
+    }
+
+    public function testAddSubscribersOnlyEmail()
+    {
+        $this->testAdd();
+
+        $subscribers = $this->getEmails(50);
+
+        $result = $this->listsApi->addSubscribers(
+            $this->testListId,
+            $subscribers,
+            true,
+            true
+        );
+
+        $this->assertTrue(
+            is_array($result)
+        );
+
+        $this->assertArrayHasKey('member_ids', $result);
+        $this->assertArrayHasKey('unsubscribed', $result);
+        $this->assertArrayHasKey('bounced', $result);
+        $this->assertArrayHasKey('updated', $result);
+
+        $this->assertCount(50, $result['member_ids']);
+    }
+
+    public function testAddSubscribersWithMergeFields()
+    {
+        $this->testAdd();
+
+        $subscribers = [];
+
+        for ($i = 0; $i < 50; $i++) {
+            $subscribers[] = [
+                $this->faker->email,
+                $this->faker->name,
+                $this->faker->lastName,
+                $this->faker->word,
+                $this->faker->word
+            ];
+        }
+
+        $result = $this->listsApi->addSubscribers(
+            $this->testListId,
+            $subscribers,
+            true,
+            true
+        );
+
+        $this->assertTrue(
+            is_array($result)
+        );
+
+        $this->assertCount(50, $result['member_ids']);
+    }
+
+    public function testAddSubscribersWithTooManyMergeFields()
+    {
+        $this->testAdd();
+
+        $subscribers = [];
+
+        for ($i = 0; $i < 50; $i++) {
+            $subscribers[] = [
+                $this->faker->email,
+                $this->faker->name,
+                $this->faker->lastName,
+                $this->faker->word,
+                $this->faker->word,
+                $this->faker->word,
+                $this->faker->word,
+                $this->faker->word,
+                $this->faker->word,
+                $this->faker->word,
+                $this->faker->word,
+                $this->faker->word,
+            ];
+        }
+
+        $this->setExpectedException('InvalidArgumentException');
+
+        $this->listsApi->addSubscribers(
+            $this->testListId,
+            $subscribers,
+            true,
+            true
+        );
+
+    }
+
+    public function testAddSameSubscribersTwice()
+    {
+        $this->testAdd();
+
+        $subscribers = $this->getEmails(50);
+
+        $result = $this->listsApi->addSubscribers(
+            $this->testListId,
+            $subscribers,
+            true,
+            true
+        );
+
+        $this->assertTrue(
+            is_array($result)
+        );
+
+        $this->assertCount(
+            50,
+            $result['member_ids']
+        );
+        $this->assertEquals(
+            0, $result['updated']
+        );
+
+        $result = $this->listsApi->addSubscribers(
+            $this->testListId,
+            $subscribers,
+            true,
+            true
+        );
+
+        $this->assertTrue(
+            is_array($result)
+        );
+        $this->assertCount(
+            0,
+            $result['member_ids']
+        );
+        $this->assertEquals(
+            50, $result['updated']
+        );
+    }
+
+    // WARNING: takes too long
+    public function testAddOneThousandSubscribersAtOnce()
+    {
+        $this->testAdd();
+
+        $subscribers = $this->getEmails(1000);
+
+        $result = $this->listsApi->addSubscribers(
+            $this->testListId,
+            $subscribers,
+            true,
+            true
+        );
+
+        $this->assertTrue(
+            is_array($result)
+        );
+    }
+
+    private function getEmails($count = 50)
+    {
+        $emails = [];
+
+        for ($i = 0; $i < $count; $i++) {
+            $emails[] = $this->faker->email;
+        }
+
+        return $emails;
     }
 
 }

@@ -198,4 +198,71 @@ class Lists
             $result['text'], 2, null, $params
         );
     }
+
+    /**
+     * Adds multiple subscribers to list in one hgo
+     * @param int $listId Address list ID
+     * @param array $subscribers Array of
+     * @param false $update should existing entries be updated
+     * @param false $noCheck should emails be checked for validity
+     * @return array
+     * @throws DashaMailRequestErrorException
+     * @throws \VKolegov\DashaMail\Exceptions\DashaMailConnectionException
+     * @throws \VKolegov\DashaMail\Exceptions\DashaMailInvalidResponseException
+     * @see https://dashamail.ru/api_details/?method=lists.add_member_batch
+     */
+    public function addSubscribers($listId, $subscribers, $update = false, $noCheck = false)
+    {
+        $methodName = 'lists.add_member_batch';
+
+        if (!is_int($listId) || $listId <= 0) {
+            throw new \InvalidArgumentException("\$listId should be positive integer");
+        }
+
+        if (!is_array($subscribers) || count($subscribers) < 1) {
+            throw new \InvalidArgumentException("\$subscribers should be non-empty array");
+        }
+
+        $params = [
+            'list_id' => $listId,
+            'update' => $update,
+            'no_check' => $noCheck
+        ];
+
+        $batch = ""; // string of members
+        foreach ($subscribers as $subscriber) {
+
+            if (!is_array($subscriber) && !is_string($subscriber)) {
+                throw new \InvalidArgumentException(
+                    "\$subscribers should be multi-dimensional array or string"
+                );
+            }
+
+            if (is_array($subscriber)) {
+                if (count($subscriber) > 11) {
+                    throw new \InvalidArgumentException(
+                        "\$subscribers elements can't be more than 11 elements"
+                    );
+                }
+                $batch .= implode(',', $subscriber);
+            } else {
+                $batch .= $subscriber;
+            }
+
+            $batch .= ';';
+        }
+
+        $params['batch'] = $batch;
+
+        $result = $this->connection->callMethod($methodName, $params, 'POST');
+
+        // converting member ids to array
+        if (strlen($result['member_ids']) > 0) {
+            $result['member_ids'] = explode(',', $result['member_ids']);
+        } else {
+            $result['member_ids'] = [];
+        }
+
+        return $result;
+    }
 }
