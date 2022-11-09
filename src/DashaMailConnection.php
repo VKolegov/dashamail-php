@@ -75,8 +75,11 @@ class DashaMailConnection
 
         $responseResult = curl_exec($curlHandle);
 
+
         if ($responseResult === false) {
-            throw new DashaMailConnectionException("Failed cURL request: [$httpMethod] : $url");
+            $responseCode = curl_getinfo($curlHandle, CURLINFO_HTTP_CODE);
+            $curlErrorMsg = curl_error($curlHandle);
+            throw new DashaMailConnectionException("Failed cURL request: [$httpMethod] : $url | $curlErrorMsg", $responseCode);
         }
 
         // Retrieve Response Status Code
